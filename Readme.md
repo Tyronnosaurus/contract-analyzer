@@ -2,8 +2,11 @@
 Upload a contract PDF and receive a score and in depth analysis.
 
 ![homepage](pictures/homepage.png)
+____________________________________________
 ![dashboard](pictures/dashboard.png)
+____________________________________________
 ![analysis results](pictures/analysis_results.png)
+____________________________________________
 ![risks](pictures/risks.png)
 
 
