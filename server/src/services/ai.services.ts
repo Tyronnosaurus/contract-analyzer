@@ -1,3 +1,11 @@
+/**
+ * Provides AI-powered services for contract analysis using AI services and Redis:
+ *   extractTextFromPDF, detectContractType, analyzeContractWithAI
+ * 
+ * - Integrations:
+ *   - Uses Redis for temporary file storage.
+ *   - Leverages Google Generative AI for content generation and analysis.
+ */
 import redis from "../config/redis";
 import { getDocument } from "pdfjs-dist";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -6,6 +14,7 @@ const AI_MODEL = "gemini-2.5-pro-exp-03-25";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const aiModel = genAI.getGenerativeModel({ model: AI_MODEL });
 
+// Extracts text from a PDF file stored in Redis.
 export const extractTextFromPDF = async (fileKey: string) => {
   try {
     const fileData = await redis.get(fileKey);
@@ -44,6 +53,7 @@ export const extractTextFromPDF = async (fileKey: string) => {
   }
 };
 
+// Determines the type of a contract based on its text
 export const detectContractType = async (
   contractText: string
 ): Promise<string> => {
@@ -61,6 +71,9 @@ export const detectContractType = async (
   return response.text().trim();
 };
 
+// Analyzes a contract using AI, providing risks, opportunities, summaries, etc.
+// Supports both "free" and "premium" tiers with varying levels of detail.
+// Includes fallback logic to handle JSON parsing errors and extract partial results.
 export const analyzeContractWithAI = async (
   contractText: string,
   tier: "free" | "premium",
@@ -133,7 +146,7 @@ export const analyzeContractWithAI = async (
   const response = await results.response;
   let text = response.text();
 
-  // remove any markdown formatting
+  // Remove any markdown formatting
   text = text.replace(/```json\n?|\n?```/g, "").trim();
 
   try {

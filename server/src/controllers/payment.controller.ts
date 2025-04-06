@@ -1,3 +1,12 @@
+/**
+ * Contains the controller logic for handling payment-related operations using Stripe.
+ * 
+ * - `createCheckoutSession`: Creates a Stripe Checkout session for processing payments.
+ * - `handleWebhook`: Handles Stripe webhooks to process events like successful payments and upgrades users to premium.
+ * - `getPremiumStatus`: Retrieves the premium subscription status of the authenticated user.
+ * 
+ * The controller integrates with Stripe for payment processing and sends confirmation emails upon successful upgrades.
+*/
 import { Request, Response } from "express";
 import Stripe from "stripe";
 import User, { IUser } from "../models/user.model";

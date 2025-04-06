@@ -1,3 +1,14 @@
+/**
+ * Logic for handling contract-related operations.
+ * 
+ * - uploadMiddleware: for handling PDF file uploads.
+ * - detectAndConfirmContractType: Detects type of a contract from an uploaded PDF, using AI services.
+ * - analyzeContract: Analyzes uploaded contract using AI, providing summary, risks and opportunities.
+ * - getUserContracts: Retrieves all contracts associated with the authenticated user, sorted by creation date.
+ * - getContractByID: Retrieves specific contract by its ID, with caching support via Redis.
+ * 
+ * The controller integrates with Redis for caching and uses MongoDB for storing contract analysis data.
+ */
 import { Request, Response } from "express";
 import multer from "multer";
 import { IUser } from "../models/user.model";
@@ -135,7 +146,7 @@ export const getContractByID = async (req: Request, res: Response) => {
       return res.json(cachedContracts);
     }
 
-    //if not in cache, get from db
+    // If not in cache, get from db
     const contract = await ContractAnalysisSchema.findOne({
       _id: id,
       userId: user._id,
@@ -145,7 +156,7 @@ export const getContractByID = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Contract not found" });
     }
 
-    //Cache the results for future requests
+    // Cache the results for future requests
     await redis.set(`contract:${id}`, contract, { ex: 3600 }); // 1 hour
 
     res.json(contract);

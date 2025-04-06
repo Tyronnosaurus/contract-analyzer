@@ -1,3 +1,19 @@
+/**
+ * Defines the Mongoose schema and TypeScript interfaces for contract analysis results.
+ * 
+ * - Interfaces:
+ *   - `IRisk`: Represents a risk with its explanation and severity level.
+ *   - `IOpportunity`: Represents an opportunity with its explanation and impact level.
+ *   - `ICompensationStructure`: Details compensation elements like salary, bonuses, and equity.
+ *   - `IContractAnalysis`: Represents the structure of a contract analysis document, including fields like risks, opportunities, summary, recommendations, and more.
+ * 
+ * - Schema:
+ *   - `ContractAnalysisSchema`: Defines the MongoDB schema for storing contract analysis data, including user ID, contract text, risks, opportunities, key clauses, performance metrics, and other metadata.
+ *   - Includes validation for certain fields (e.g., intellectual property clauses).
+ * 
+ * - Exports:
+ *   - A Mongoose model named `ContractAnalysis` based on the schema.
+ */
 import mongoose, { Schema } from "mongoose";
 import { IUser } from "./user.model";
 

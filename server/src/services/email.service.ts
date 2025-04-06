@@ -1,9 +1,14 @@
+/**
+ * Provides email-related services using the Resend API.
+ */
 import { Resend } from "resend";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
+// Instance of the Resend client (initialized with an API key), available for all the application.
 export const resend = new Resend(RESEND_API_KEY);
 
+// Sends a confirmation email to users who upgrade to Premium, including their name and a welcome message.
 export const sendPremiumConfirmationEmail = async (
   userEmail: string,
   userName: string

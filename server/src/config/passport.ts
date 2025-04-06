@@ -1,3 +1,13 @@
+ /**
+   Configures Passport.js for user authentication using Google OAuth 2.0.
+   
+   - Initializes the GoogleStrategy with client credentials and a callback URL.
+   - In the callback, checks if a user with the given Google ID exists in the database.
+     - If user exists, it logs them in.
+     - If user does not exist, creates new user with the provided Google profile info.
+   - Serializes the user by storing their ID in the session.
+   - Deserializes the user by retrieving their details from the database using the stored ID.
+ */
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import User, { IUser } from "../models/user.model";
