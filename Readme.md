@@ -1,4 +1,31 @@
+# Contract Analizer
+Upload a contract PDF and receive a score and in depth analysis.
+
+![homepage](pictures/homepage.png)
+![dashboard](pictures/dashboard.png)
+![analysis results](pictures/analysis_results.png)
+![risks](pictures/risks.png)
+
+
+## RUN APPLICATION LOCALLY
+
+1) Start Mongo: open terminal in /server and run: docker compose up -d
+
+2) (Optional, for payments)
+Make sure Stripe CLI is installed. For Windows, open terminal in /stripe_1.26.1_windows_x86_64
+./stripe login      --> Will ask to login on the browser with a confirmation code sent by mail
+./stripe listen --forward-to localhost:8080/payments/webhook   --> Copy secret to Server's .env
+
+3) Open terminal in /server and run: npm run dev
+
+4) Open terminal in /client and run: npm run dev
+
+
+
+## SETUP 3rd PARTY SERVICES
+
 ### MONGO
+Instead of using a 3rd party service, we'll 
 Go to the folder docker-compose.yaml. Make sure Docker is running.
 docker compose up -d
 
