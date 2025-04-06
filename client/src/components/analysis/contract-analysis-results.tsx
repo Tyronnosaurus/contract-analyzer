@@ -333,7 +333,7 @@ export default function ContractAnalysisResults({
                     <p>{analysisResults.terminationConditions}</p>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-2">Legal Informatiob</h3>
+                    <h3 className="font-semibold mb-2">Legal Information</h3>
                     <p>
                       <strong>Legal Compliance</strong>
                       {analysisResults.legalCompliance}
