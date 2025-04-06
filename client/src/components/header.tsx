@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "./ui/button";
 import { UserButton } from "./shared/user-button";
 
 const navItems: { name: string; href: string }[] = [
@@ -17,29 +16,29 @@ export function Header() {
 
   return (
     <header className="sticky px-4 top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
-      <div className="container flex h-16 items-center">
-        <div className="mr-4 hidden md:flex">
+      <div className="container flex h-16 justify-between max-w-6xl mx-auto">
           <Link href={"/"} className="mr-6 flex items-center space-x-2">
             LOGO
           </Link>
-          <nav className="flex items-center space-x-7 text-sm font-medium">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "transition-colors hover:text-foreground/80",
-                  pathname === item.href
-                    ? "text-foreground"
-                    : "text-foreground/60"
-                )}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
+          <div className="hidden sm:flex">
+            <nav className="flex items-center space-x-7 text-sm font-medium mr-6">
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "transition-colors hover:text-foreground/80",
+                    pathname === item.href
+                      ? "text-foreground"
+                      : "text-foreground/60"
+                  )}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
+          <UserButton />
         </div>
-        <UserButton />
       </div>
     </header>
   );
