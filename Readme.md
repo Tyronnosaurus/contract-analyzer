@@ -1,4 +1,4 @@
-# Contract Analizer
+# Contract Analyzer
 Upload a contract PDF and receive a score and in depth analysis.
 
 ![homepage](pictures/homepage.png)
