@@ -39,7 +39,7 @@ export default function UserContracts() {
 
   // Define columns for the table (contract ID, score, type, and actions).
   // Defines how each column behaves and displays. Renders badges with different colors depending on contract type or score.
-  const columns: ColumnDef<ContractAnalysis>[] = [
+  const contractsColumns: ColumnDef<ContractAnalysis>[] = [
     {
       accessorKey: "_id",
       header: ({ column }) => {
@@ -133,11 +133,86 @@ export default function UserContracts() {
     },
   ];
 
+
+  const auxFilesColumns: ColumnDef<ContractAnalysis>[] = [
+    {
+      accessorKey: "_id",
+      header: ({ column }) => {
+        return <Button variant={"ghost"}>File ID</Button>;
+      },
+      cell: ({ row }) => (
+        <div className="font-medium">{row.getValue<string>("_id")}</div>
+      ),
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const contract = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant={"ghost"} className="size-8 p-0">
+                <span className="sr-only">
+                  Open menu
+                </span>
+                <MoreHorizontal className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    <span className="text-destructive">
+                      Delete File
+                    </span>
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your file and remove your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction>Continue</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+
+
+
+
   // Create table with useReactTable, which handles table logic (sorting, pagination, rendering).
   // Manage headers, rows, cells with flexRender.
   const contractsTable = useReactTable({
     data: contracts ?? [],
-    columns,
+    columns: contractsColumns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+  });
+
+  // Create table with useReactTable, which handles table logic (sorting, pagination, rendering).
+  // Manage headers, rows, cells with flexRender.
+  const auxFilesTable = useReactTable({
+    data: contracts ?? [],
+    columns: auxFilesColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -247,7 +322,7 @@ export default function UserContracts() {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={contractsColumns.length}
                   className="h-24 text-center"
                 >
                   No results.
@@ -284,6 +359,86 @@ export default function UserContracts() {
         onClose={() => setIsUploadModalOpen(false)}
         onUploadComplete={() => contractsTable.reset()}
       />
+
+      {/* ///////////////////////////////// */}
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Auxiliar files</h1>
+        <Button onClick={() => setIsUploadModalOpen(true)}>New auxiliar file</Button>
+      </div>
+
+      {/* List of auxiliar files */}
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {auxFilesTable.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {auxFilesTable.getRowModel().rows?.length ? (
+              auxFilesTable.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={auxFilesColumns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Table pagination */}
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant={"outline"}
+          size={"sm"}
+          onClick={() => auxFilesTable.setPageIndex(0)}
+          disabled={!auxFilesTable.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant={"outline"}
+          size={"sm"}
+          onClick={() => auxFilesTable.nextPage()}
+          disabled={!auxFilesTable.getCanNextPage()}
+        >
+          Next
+        </Button>
+      </div>
+
+
     </div>
   );
 }
