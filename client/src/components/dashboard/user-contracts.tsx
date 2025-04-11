@@ -3,58 +3,30 @@ import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable} from "@tanstack/react-table";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "../ui/table";
 import { UploadModal } from "../modals/upload-modal";
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger} from "../ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger} from "@/components/ui/alert-dialog";
+
 
 export default function UserContracts() {
+  // Fetch user contracts
   const { data: contracts } = useQuery<ContractAnalysis[]>({
     queryKey: ["user-contracts"],
     queryFn: () => fetchUserContracts(),
   });
 
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [sorting, setSorting] = useState<SortingState>([]); // Table sorting state
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);  // Controls visibility of the UploadModal
 
+  // Define colors for different contract types labels
   const contractTypeColors: { [key: string]: string } = {
     Employment: "bg-blue-100 text-blue-800 hover:bg-blue-200",
     "Non-Disclosure Agreement":
@@ -65,6 +37,8 @@ export default function UserContracts() {
     Other: "bg-gray-100 text-gray-800 hover:bg-gray-200",
   };
 
+  // Define columns for the table (contract ID, score, type, and actions).
+  // Defines how each column behaves and displays. Renders badges with different colors depending on contract type or score.
   const columns: ColumnDef<ContractAnalysis>[] = [
     {
       accessorKey: "_id",
@@ -115,7 +89,9 @@ export default function UserContracts() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant={"ghost"} className="size-8 p-0">
-                <span className="sr-only">Open menu</span>
+                <span className="sr-only">
+                  Open menu
+                </span>
                 <MoreHorizontal className="size-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -129,7 +105,9 @@ export default function UserContracts() {
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                    <span className="text-destructive">Delete Contract</span>
+                    <span className="text-destructive">
+                      Delete Contract
+                    </span>
                   </DropdownMenuItem>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -155,7 +133,9 @@ export default function UserContracts() {
     },
   ];
 
-  const table = useReactTable({
+  // Create table with useReactTable, which handles table logic (sorting, pagination, rendering).
+  // Manage headers, rows, cells with flexRender.
+  const contractsTable = useReactTable({
     data: contracts ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -167,7 +147,9 @@ export default function UserContracts() {
     },
   });
 
+  // Calculate data for the 3 cards at the top
   const totalContracts = contracts?.length || 0;
+  
   const averageScore =
     totalContracts > 0
       ? (contracts?.reduce(
@@ -181,6 +163,7 @@ export default function UserContracts() {
       contract.risks.some((risk) => risk.severity === "high")
     ).length ?? 0;
 
+
   return (
     <div className="container mx-auto p-6 space-y-8">
       <div className="flex justify-between items-center">
@@ -189,6 +172,8 @@ export default function UserContracts() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        {/* General cards (Total Contracts, Average Score, High Risk Contracts)  */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -202,7 +187,7 @@ export default function UserContracts() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Contracts
+              Average Score
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -221,10 +206,11 @@ export default function UserContracts() {
         </Card>
       </div>
 
+      {/* List of contracts */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {contractsTable.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
@@ -242,8 +228,8 @@ export default function UserContracts() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+            {contractsTable.getRowModel().rows?.length ? (
+              contractsTable.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
@@ -271,33 +257,38 @@ export default function UserContracts() {
           </TableBody>
         </Table>
       </div>
+
+      {/* Table pagination */}
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant={"outline"}
           size={"sm"}
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
+          onClick={() => contractsTable.setPageIndex(0)}
+          disabled={!contractsTable.getCanPreviousPage()}
         >
           Previous
         </Button>
         <Button
           variant={"outline"}
           size={"sm"}
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={() => contractsTable.nextPage()}
+          disabled={!contractsTable.getCanNextPage()}
         >
           Next
         </Button>
       </div>
+
+      {/* Modal for uploading new contracts. On completion, it refreshes the table */}
       <UploadModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
-        onUploadComplete={() => table.reset()}
+        onUploadComplete={() => contractsTable.reset()}
       />
     </div>
   );
 }
 
+// Helper to fetch contract data using an api in the backend 
 async function fetchUserContracts(): Promise<ContractAnalysis[]> {
   const response = await api.get("/contracts/user-contracts");
   return response.data;

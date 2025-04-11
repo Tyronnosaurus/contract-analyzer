@@ -16,6 +16,7 @@ import { useModalStore } from "@/store/zustand";
 export function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useCurrentUser();
 
+  // While the user info is loading, display spinner
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -26,6 +27,7 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
+  // If user is not authenticated, show the AuthCard
   if (!user) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -34,9 +36,12 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
+  // Otherwise, show the children
   return <>{children}</>;
 }
 
+
+// Login prompt card UI shown when the user is not logged in
 export default function AuthCard() {
   const { openModal } = useModalStore();
 
