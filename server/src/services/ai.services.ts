@@ -1,6 +1,6 @@
 /**
  * Provides AI-powered services for contract analysis using AI services and Redis:
- *   extractTextFromPDF, detectContractType, analyzeContractWithAI
+ *   extractTextFromFile, detectContractType, analyzeContractWithAI
  * 
  * - Integrations:
  *   - Uses Redis for temporary file storage.
@@ -13,6 +13,27 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const AI_MODEL = "gemini-2.5-pro-exp-03-25";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const aiModel = genAI.getGenerativeModel({ model: AI_MODEL });
+
+
+// Check type of file and use adequate method to extract text
+export const extractTextFromFile = async (fileKey: string) => {
+  const fileExtension = fileKey.split('.').pop()?.toLowerCase(); // Get file extension
+
+  switch (fileExtension) {
+    case 'pdf':
+      return await extractTextFromPDF(fileKey);
+    case 'docx':
+      throw new Error('DOCX extraction not implemented yet.'); // Placeholder: Implement extractTextFromDOCX
+    case 'txt':
+      throw new Error('TXT extraction not implemented yet.'); // Placeholder: Implement extractTextFromTXT
+    case 'xlsx':
+      throw new Error('XLSX extraction not implemented yet.'); // Placeholder: Implement extractTextFromXLSX
+    default:
+      throw new Error(`Unsupported file type: .${fileExtension}`);
+  }
+};
+
+
 
 // Extracts text from a PDF file stored in Redis.
 export const extractTextFromPDF = async (fileKey: string) => {

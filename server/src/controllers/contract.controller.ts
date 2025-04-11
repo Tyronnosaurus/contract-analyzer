@@ -16,7 +16,7 @@ import redis from "../config/redis";
 import {
   analyzeContractWithAI,
   detectContractType,
-  extractTextFromPDF,
+  extractTextFromFile,
 } from "../services/ai.services";
 import ContractAnalysisSchema, {
   IContractAnalysis,
@@ -54,8 +54,8 @@ export const detectAndConfirmContractType = async (
 
     await redis.expire(fileKey, 3600); // 1 hour
 
-    const pdfText = await extractTextFromPDF(fileKey);
-    const detectedType = await detectContractType(pdfText);
+    const documentText = await extractTextFromFile(fileKey);
+    const detectedType = await detectContractType(documentText);
 
     await redis.del(fileKey);
 
