@@ -83,7 +83,7 @@ export const analyzeContract = async (req: Request, res: Response) => {
     await redis.set(fileKey, req.file.buffer);
     await redis.expire(fileKey, 3600); // 1 hour
 
-    const pdfText = await extractTextFromPDF(fileKey);
+    const pdfText = await extractTextFromFile(fileKey);
     let analysis;
 
     if (user.isPremium) {
