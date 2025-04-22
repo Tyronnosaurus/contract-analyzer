@@ -117,7 +117,7 @@ export const analyzeContractWithAI = async (
     11. Any performance metrics or KPIs mentioned, if applicable.
     12. A summary of any specific clauses relevant to this type of contract (e.g., intellectual property for employment contracts, warranties for sales contracts).
     13. An overall score from 1 to 100, with 100 being the highest. This score represents the overall favorability of the contract based on the identified risks and opportunities.
-
+  
     Format your response as a JSON object with the following structure:
     {
       "risks": [{"risk": "Risk description", "explanation": "Brief explanation", "severity": "low|medium|high"}],

@@ -17,8 +17,8 @@ export function Header() {
   return (
     <header className="sticky px-4 top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
       <div className="container flex h-16 justify-between max-w-6xl mx-auto">
-          <Link href={"/"} className="mr-6 flex items-center space-x-2">
-            LOGO
+          <Link href={"/"} className="mr-6 flex items-center space-x-2 font-black">
+            IMIR
           </Link>
           <div className="hidden sm:flex">
             <nav className="flex items-center space-x-7 text-sm font-medium mr-6">
