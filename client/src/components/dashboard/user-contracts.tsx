@@ -360,14 +360,16 @@ export default function UserContracts() {
         onUploadComplete={() => contractsTable.reset()}
       />
 
-      {/* ///////////////////////////////// */}
-      <div className="flex justify-between items-center">
+      {/* ////////////////////////////////////////////////////////////////////////////////////// */}
+      {/* Table for auxiliar files. TODO: Add functionality to upload auxiliar files, create or modify the upload modal to handle this. */}
+      
+      {/* <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Auxiliar files</h1>
         <Button onClick={() => setIsUploadModalOpen(true)}>New auxiliar file</Button>
-      </div>
+      </div> */}
 
       {/* List of auxiliar files */}
-      <div className="rounded-md border">
+      {/* <div className="rounded-md border">
         <Table>
           <TableHeader>
             {auxFilesTable.getHeaderGroups().map((headerGroup) => (
@@ -416,10 +418,10 @@ export default function UserContracts() {
             )}
           </TableBody>
         </Table>
-      </div>
+      </div> */}
 
       {/* Table pagination */}
-      <div className="flex items-center justify-end space-x-2 py-4">
+      {/* <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant={"outline"}
           size={"sm"}
@@ -436,7 +438,7 @@ export default function UserContracts() {
         >
           Next
         </Button>
-      </div>
+      </div> */}
 
 
     </div>
