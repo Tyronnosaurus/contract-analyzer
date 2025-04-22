@@ -32,12 +32,10 @@ export function UploadModal({
   const { setAnalysisResults } = useContractStore();
   const router = useRouter();
 
-  const [detectedType, setDetectedType] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [files, setFiles] = useState<File[]>([]);
-  const [step, setStep] = useState<
-    "upload" | "detecting" | "confirm" | "processing" | "done"
-  >("upload");
+  const [detectedType, setDetectedType] = useState<string | null>(null); // Result from the /contracts/detect-type API
+  const [error, setError] = useState<string | null>(null);  // Error message, if any
+  const [files, setFiles] = useState<File[]>([]); // Holds the uploaded file (only one allowed)
+  const [step, setStep] = useState<"upload" | "detecting" | "confirm" | "processing" | "done">("upload"); // Controls UI flow
 
   const { mutate: detectContractType } = useMutation({
     mutationFn: async (file: File) => {
